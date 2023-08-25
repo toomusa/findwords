@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+# Find Words
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was created as a take-home assignment for a job opportunity.
 
-## Available Scripts
+## Introduction
 
-In the project directory, you can run:
+This app lets users enter a string of letters and returns valid English words that can be created using only the given letters.
 
-### `npm start`
+#### Run `npm install`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This will install all necessary dependencies.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+#### Run `npm start`
 
-### `npm test`
+This will run the app on [http://localhost:3000](http://localhost:3000) by default.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage
 
-### `npm run build`
+- User can only enter valid english letters (A_Z or a-z).
+- The input is not case-sensitive.
+- Numbers, spaces, and special characters are not allowed.
+- Minimum of 2 letters are needed to submit the search.
+- Maximum of 5 letters can be entered due to runtime and daily usage limits of WordsAPI.
+- Searching "oodg" returns more valid words than given in the description. 
+  - example: "dg" is a valid abbreviation of director general.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Roadmap
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Maintain search history through local storage.
+- Add word definitions.
+- Find another API that allows batch queries to improve performance.
+- API key can be hidden but not necessary for current implementation since it's free and has a daily limit.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Optimization
 
-### `npm run eject`
+In order the optimize this app for production, it may be possible to implement a multi-way search tree.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+  - Download all dictionary data (~ 385,000 words).
+  - Restructure all data as a M-way tree and save to own database.
+  - For each user query, retrieve all data in a single DB call.
+  - Search through M-way tree to find valid words without having to generate all possible combinations first.
+    - example: if our input is "fodg", if there are no words starting "dg", then it is no longer necessary to look up "dgo, dgf, dgof, dgfo, etc."
+  - The time complexity of this method would be O(log m (n)), instead of the current implementation, which is O(n²).
+  - This method could allow the search of more than 5 letters without a serious compromise to user experience.
